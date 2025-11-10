@@ -18,10 +18,43 @@ fn part_1() -> io::Result<u32> {
     let reports = load_reports().unwrap();
     let mut safe: u32 = 0;
     for report in &reports{
-        let mut level_safe: bool = true;
-        let mut prev_diff: i32 = 0;
-        for (idx, &lvl) in report[1..].iter().enumerate(){
-            let curr_diff: i32 = lvl - report[idx];
+        if is_sub_report_safe(report, None).unwrap() {
+            safe += 1;
+        } 
+    }
+    Ok(safe)
+}
+
+// part 2 wants us to repeat the same search, but this time, if a vector is not monotonic and
+// smooth but removing any one value will make it so, then we will count it as monotonic and smooth. 
+fn part_2() -> io::Result<u32> {
+    let reports = load_reports().unwrap();
+    let mut safe: u32 = 0; 
+    for report in &reports {
+        if is_sub_report_safe(report, None).unwrap() {
+            safe += 1;
+        } else{
+            for idx in 0..report.len() {
+                if is_sub_report_safe(report, Some(idx)).unwrap() {
+                    safe += 1;
+                    break;
+                }
+            }
+        }
+    }
+    Ok(safe)
+}
+
+fn is_sub_report_safe(report: &Vec<i32>, skipped_index: Option<usize>) -> io::Result<bool> {
+    let mut level_safe: bool = true;
+    let mut prev_diff: i32 = 0;
+    let mut prev: Option<i32> = None;
+    for (idx, &lvl) in report.iter().enumerate(){
+        if Some(idx) == skipped_index {
+            continue;
+        }
+        if let Some(p) = prev {
+            let curr_diff: i32 = lvl - p;
             if curr_diff.abs() > 3 || curr_diff.abs() < 1{
                 level_safe = false;
                 break;
@@ -31,15 +64,9 @@ fn part_1() -> io::Result<u32> {
             }
             prev_diff = curr_diff;
         }
-        if level_safe {safe += 1}
+        prev = Some(lvl);
     }
-    Ok(safe)
-}
-
-// part 2 wants us to repeat the same search, but this time, if a vector is not monotonic and
-// smooth but removing any one value will make it so, then we will count it as monotonic and smooth. 
-fn part_2() -> io::Result<u32> {
-    Ok(2)
+    Ok(level_safe)
 }
 
 fn load_reports() -> io::Result<Vec<Vec<i32>>> {
