@@ -1,12 +1,12 @@
 use std::fs;
 use std::io;
 
-pub fn solve(){
-    match part_1() {
+pub fn solve(input_file: &str){
+    match part_1(input_file) {
         Ok(contents) => println!("Part 1: {:?}", contents),
         Err(e) => println!("Error in part 1: {}", e),
     }
-    match part_2() {
+    match part_2(input_file) {
         Ok(contents) => println!("Part 2: {}", contents),
         Err(e) => println!("Error in part 2: {}", e),
     }
@@ -14,8 +14,8 @@ pub fn solve(){
 
 // part 1 wants us to iterate over many vectors, and see how many of these vectors are both strictly monotonic 
 // and "smooth", i.e. sequential values differ by 3 at most.
-fn part_1() -> io::Result<u32> {
-    let reports = load_reports().unwrap();
+fn part_1(input_file: &str) -> io::Result<u32> {
+    let reports = load_reports(input_file).unwrap();
     let mut safe: u32 = 0;
     for report in &reports{
         if is_sub_report_safe(report, None).unwrap() {
@@ -27,8 +27,8 @@ fn part_1() -> io::Result<u32> {
 
 // part 2 wants us to repeat the same search, but this time, if a vector is not monotonic and
 // smooth but removing any one value will make it so, then we will count it as monotonic and smooth. 
-fn part_2() -> io::Result<u32> {
-    let reports = load_reports().unwrap();
+fn part_2(input_file: &str) -> io::Result<u32> {
+    let reports = load_reports(input_file).unwrap();
     let mut safe: u32 = 0; 
     for report in &reports {
         if is_sub_report_safe(report, None).unwrap() {
@@ -69,8 +69,8 @@ fn is_sub_report_safe(report: &Vec<i32>, skipped_index: Option<usize>) -> io::Re
     Ok(level_safe)
 }
 
-fn load_reports() -> io::Result<Vec<Vec<i32>>> {
-    let content: String = fs::read_to_string("./inputs/day02_p1.txt")?;
+fn load_reports(input_file: &str) -> io::Result<Vec<Vec<i32>>> {
+    let content: String = fs::read_to_string(input_file)?;
 
     let mut all_reports = Vec::new();
     for line in content.lines() {

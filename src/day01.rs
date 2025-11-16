@@ -3,12 +3,12 @@ use std::io;
 use std::iter::zip;
 use std::collections::HashMap;
 
-pub fn solve(){
-    match part_1() {
+pub fn solve(input_file: &str){
+    match part_1(input_file) {
         Ok(contents) => println!("Part 1: {:?}", contents),
         Err(e) => println!("Error in part 1: {}", e),
     }
-    match part_2() {
+    match part_2(input_file) {
         Ok(contents) => println!("Part 2: {}", contents),
         Err(e) => println!("Error in part 2: {}", e),
     }
@@ -16,8 +16,8 @@ pub fn solve(){
 
 // The whole idea behind part 1 is to take two lists and compute 
 // \sum |list1_i - list2_i| after the elements are sorted
-fn part_1() -> io::Result<u32> {
-    let (list_one, list_two) = load_sorted_lists()?;
+fn part_1(input_file: &str) -> io::Result<u32> {
+    let (list_one, list_two) = load_sorted_lists(input_file)?;
     let mut distances = Vec::new();
     for (n1, n2) in zip(list_one, list_two){
         distances.push(n1.abs_diff(n2));
@@ -28,8 +28,8 @@ fn part_1() -> io::Result<u32> {
 // Part 2 wants us to use the same two lists and compute:
 // \sum list1_i * n_i where n_i := the number of times list1_i
 // appears in list2
-fn part_2() -> io::Result<u32>{
-    let (list_one, list_two) = load_sorted_lists()?;
+fn part_2(input_file: &str) -> io::Result<u32>{
+    let (list_one, list_two) = load_sorted_lists(input_file)?;
     let mut frequencies: HashMap<u32, u32> = HashMap::new();
 
     // rust does something interesting, pattern matching -> auto deref. 
@@ -57,8 +57,8 @@ fn part_2() -> io::Result<u32>{
     Ok(similarity)
 }
 
-fn load_sorted_lists() -> io::Result<(Vec<u32>, Vec<u32>)> {
-    let content: String = fs::read_to_string("./inputs/day01_p1.txt")?;
+fn load_sorted_lists(input_file: &str) -> io::Result<(Vec<u32>, Vec<u32>)> {
+    let content: String = fs::read_to_string(input_file)?;
 
     let mut list_one = Vec::new();
     let mut list_two = Vec::new();

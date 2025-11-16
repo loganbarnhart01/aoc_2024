@@ -2,19 +2,19 @@ use std::fs;
 use std::io;
 
 
-pub fn solve() {
-    match part_1() {
+pub fn solve(input_file: &str) {
+    match part_1(input_file) {
         Ok(contents) => println!("Part 1: {:?}", contents),
         Err(e) => println!("Error in part 1: {}", e),
     }
-    match part_2() {
+    match part_2(input_file) {
         Ok(contents) => println!("Part 2: {:?}", contents),
         Err(e) => println!("Error in part 1: {}", e),
     }
 }
 
-fn part_1() -> io::Result<u32> {
-    let input: Vec<char> = load_input_chars().unwrap();
+fn part_1(input_file: &str) -> io::Result<u32> {
+    let input: Vec<char> = load_input_chars(input_file).unwrap();
     if input.len() < 8 { return Ok(0) }
     let mut result: u32 = 0; 
     let mut head: usize = 0;
@@ -48,8 +48,8 @@ fn part_1() -> io::Result<u32> {
     Ok(result)
 }
 
-fn part_2() -> io::Result<u32> {
-    let input: Vec<char> = load_input_chars().unwrap();
+fn part_2(input_file: &str) -> io::Result<u32> {
+    let input: Vec<char> = load_input_chars(input_file).unwrap();
     if input.len() < 8 { return Ok(0) }
     let mut result: u32 = 0; 
     let mut head: usize = 0;
@@ -118,7 +118,7 @@ fn cast_chars_to_int(characters: &[char]) -> io::Result<u32> {
 //     Ok(content.into_bytes())
 // }
 
-fn load_input_chars() -> io::Result<Vec<char>> {
-    let content: String = fs::read_to_string("./inputs/day03.txt")?;
+fn load_input_chars(input_file: &str) -> io::Result<Vec<char>> {
+    let content: String = fs::read_to_string(input_file)?;
     Ok(content.chars().collect())
 }
