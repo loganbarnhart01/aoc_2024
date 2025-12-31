@@ -23,6 +23,7 @@ fn main() {
         2 => { day02::solve(&input_file) },
         3 => { day03::solve(&input_file) },
         4 => { day04::solve(&input_file) },
+        5 => { day05::solve(&input_file) },
         _ => { println!("Haven't solved day {} yet!", args.day) },
     }
 }
@@ -32,3 +33,4 @@ mod day01;
 mod day02;
 mod day03;
 mod day04;
+mod day05;
