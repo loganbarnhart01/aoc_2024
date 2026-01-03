@@ -1,23 +1,20 @@
 use std::fs;
-use std::io;
 use std::collections::HashMap;
 use std::ops::Div;
 
-use clap::error;
-
 pub fn solve(input_file: &String) {
     match part_1(input_file) {
-        Ok(contents) => println!("Part 1: {:?}", contents),
-        Err(e) => println!("Error in part 1: {}", e),
+        contents => println!("Part 1: {:?}", contents),
+        e => println!("Error in part 1: {}", e),
     }
     match part_2(input_file) {
-        Ok(contents) => println!("Part 2: {:?}", contents),
-        Err(e) => println!("Error in part 1: {}", e),
+        contents => println!("Part 2: {:?}", contents),
+        e => println!("Error in part 1: {}", e),
     }
 }
 
-fn part_1(input_file: &str) -> io::Result<usize> {
-    let (rules, manuals) = load_rules(input_file).unwrap();
+fn part_1(input_file: &str) -> usize {
+    let (rules, manuals) = load_rules(input_file);
     let mut middles: Vec<usize> = Vec::new();
 
     // Make hashmap of {number : [all, numbers, that, need, to, be, after]}
@@ -55,11 +52,11 @@ fn part_1(input_file: &str) -> io::Result<usize> {
             middles.push(middle); 
         }
     }
-    Ok(middles.iter().sum())
+    middles.iter().sum()
 }
 
-fn part_2(input_file: &str) -> io::Result<usize> {
-    let (rules, manuals) = load_rules(input_file).unwrap();
+fn part_2(input_file: &str) -> usize {
+    let (rules, manuals) = load_rules(input_file);
     let mut middles: Vec<usize> = Vec::new();
     let mut rule_map: HashMap<usize, Vec<usize>> = HashMap::new();
     for rule in &rules {
@@ -91,7 +88,7 @@ fn part_2(input_file: &str) -> io::Result<usize> {
             middles.push(middle)
         }
     }
-    Ok(middles.iter().sum())
+    middles.iter().sum()
 }
 
 // Gets the middle entry from the ordered updates
@@ -100,7 +97,7 @@ fn part_2(input_file: &str) -> io::Result<usize> {
 // 
 // We can tell that an entry is next in the order if it doesn't appear in any of the rules of the 
 // other entries
-fn get_ordered_middle(manual: &Vec<usize>, rule_map: &HashMap<usize, Vec<usize>>) -> io::Result<usize> {
+fn get_ordered_middle(manual: &Vec<usize>, rule_map: &HashMap<usize, Vec<usize>>) -> Result<usize, String> {
     let mid_idx = manual.len().div(2);
     let mut n_ordered: usize = 0;
     let mut possible_middles: HashMap<usize, bool> = HashMap::new();
@@ -139,16 +136,15 @@ fn get_ordered_middle(manual: &Vec<usize>, rule_map: &HashMap<usize, Vec<usize>>
             }
         }
     }
-    panic!("Shouldnt be here!!!! Didn't find a middle");
-    Ok(0)
+    Err(String::from("Invalid manual, unable to reorder properly."))
 }
 
 
 // Return a tuple of arrays. 
 //   First array contains arrays of rules like [before, after]
 //   Second array contains arrays of the manuals
-fn load_rules(input_file: &str) -> io::Result<(Vec<Vec<usize>>, Vec<Vec<usize>>)> {
-    let content: String = fs::read_to_string(input_file)?;
+fn load_rules(input_file: &str) -> (Vec<Vec<usize>>, Vec<Vec<usize>>) {
+    let content: String = fs::read_to_string(input_file).unwrap();
     let mut rules = Vec::new();
     let mut manuals = Vec::new();
 
@@ -172,6 +168,5 @@ fn load_rules(input_file: &str) -> io::Result<(Vec<Vec<usize>>, Vec<Vec<usize>>)
                         .collect();
             manuals.push(split); }
     }
-
-    Ok((rules, manuals))
+    (rules, manuals)
 }
