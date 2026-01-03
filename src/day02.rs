@@ -1,51 +1,44 @@
 use std::fs;
-use std::io;
 
 pub fn solve(input_file: &str){
-    match part_1(input_file) {
-        Ok(contents) => println!("Part 1: {:?}", contents),
-        Err(e) => println!("Error in part 1: {}", e),
-    }
-    match part_2(input_file) {
-        Ok(contents) => println!("Part 2: {}", contents),
-        Err(e) => println!("Error in part 2: {}", e),
-    }
+    println!("Part 1: {:?}", part_1(input_file));
+    println!("Part 2: {}", part_2(input_file));
 }
 
 // part 1 wants us to iterate over many vectors, and see how many of these vectors are both strictly monotonic 
 // and "smooth", i.e. sequential values differ by 3 at most.
-fn part_1(input_file: &str) -> io::Result<u32> {
-    let reports = load_reports(input_file).unwrap();
+fn part_1(input_file: &str) -> u32 {
+    let reports = load_reports(input_file);
     let mut safe: u32 = 0;
     for report in &reports{
-        if is_sub_report_safe(report, None).unwrap() {
+        if is_sub_report_safe(report, None) {
             safe += 1;
         } 
     }
-    Ok(safe)
+    safe
 }
 
 // part 2 wants us to repeat the same search, but this time, if a vector is not monotonic and
 // smooth but removing any one value will make it so, then we will count it as monotonic and smooth. 
-fn part_2(input_file: &str) -> io::Result<u32> {
-    let reports = load_reports(input_file).unwrap();
+fn part_2(input_file: &str) -> u32 {
+    let reports = load_reports(input_file);
     let mut safe: u32 = 0; 
     for report in &reports {
-        if is_sub_report_safe(report, None).unwrap() {
+        if is_sub_report_safe(report, None) {
             safe += 1;
         } else{
             for idx in 0..report.len() {
-                if is_sub_report_safe(report, Some(idx)).unwrap() {
+                if is_sub_report_safe(report, Some(idx)) {
                     safe += 1;
                     break;
                 }
             }
         }
     }
-    Ok(safe)
+    safe
 }
 
-fn is_sub_report_safe(report: &Vec<i32>, skipped_index: Option<usize>) -> io::Result<bool> {
+fn is_sub_report_safe(report: &Vec<i32>, skipped_index: Option<usize>) -> bool {
     let mut level_safe: bool = true;
     let mut prev_diff: i32 = 0;
     let mut prev: Option<i32> = None;
@@ -66,11 +59,11 @@ fn is_sub_report_safe(report: &Vec<i32>, skipped_index: Option<usize>) -> io::Re
         }
         prev = Some(lvl);
     }
-    Ok(level_safe)
+    level_safe
 }
 
-fn load_reports(input_file: &str) -> io::Result<Vec<Vec<i32>>> {
-    let content: String = fs::read_to_string(input_file)?;
+fn load_reports(input_file: &str) -> Vec<Vec<i32>> {
+    let content: String = fs::read_to_string(input_file).unwrap();
 
     let mut all_reports = Vec::new();
     for line in content.lines() {
@@ -80,5 +73,5 @@ fn load_reports(input_file: &str) -> io::Result<Vec<Vec<i32>>> {
             .collect();
         all_reports.push(vu32);
     }
-    Ok(all_reports)
+    all_reports
 }

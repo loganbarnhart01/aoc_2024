@@ -3,14 +3,8 @@ use std::collections::HashMap;
 use std::ops::Div;
 
 pub fn solve(input_file: &String) {
-    match part_1(input_file) {
-        contents => println!("Part 1: {:?}", contents),
-        e => println!("Error in part 1: {}", e),
-    }
-    match part_2(input_file) {
-        contents => println!("Part 2: {:?}", contents),
-        e => println!("Error in part 1: {}", e),
-    }
+    println!("Part 1: {:?}", part_1(input_file));
+    println!("Part 2: {}", part_2(input_file));
 }
 
 fn part_1(input_file: &str) -> usize {

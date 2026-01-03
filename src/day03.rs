@@ -1,21 +1,14 @@
 use std::fs;
-use std::io;
 
 
 pub fn solve(input_file: &str) {
-    match part_1(input_file) {
-        Ok(contents) => println!("Part 1: {:?}", contents),
-        Err(e) => println!("Error in part 1: {}", e),
-    }
-    match part_2(input_file) {
-        Ok(contents) => println!("Part 2: {:?}", contents),
-        Err(e) => println!("Error in part 1: {}", e),
-    }
+    println!("Part 1: {:?}", part_1(input_file));
+    println!("Part 2: {}", part_2(input_file));
 }
 
-fn part_1(input_file: &str) -> io::Result<u32> {
-    let input: Vec<char> = load_input_chars(input_file).unwrap();
-    if input.len() < 8 { return Ok(0) }
+fn part_1(input_file: &str) -> u32 {
+    let input: Vec<char> = load_input_chars(input_file);
+    if input.len() < 8 { return 0 }
     let mut result: u32 = 0; 
     let mut head: usize = 0;
     let mut tail: usize = 0;
@@ -36,8 +29,8 @@ fn part_1(input_file: &str) -> io::Result<u32> {
                 }
             }
             if valid_mul {
-                let mult1: u32 = cast_chars_to_int(&input[head+4..comma_idx]).unwrap();
-                let mult2: u32 = cast_chars_to_int(&input[comma_idx+1..tail]).unwrap();
+                let mult1: u32 = cast_chars_to_int(&input[head+4..comma_idx]);
+                let mult2: u32 = cast_chars_to_int(&input[comma_idx+1..tail]);
                 result += mult1 * mult2;
             }
             head = tail;
@@ -45,12 +38,12 @@ fn part_1(input_file: &str) -> io::Result<u32> {
             head += 1;
         }
     }
-    Ok(result)
+    result
 }
 
-fn part_2(input_file: &str) -> io::Result<u32> {
-    let input: Vec<char> = load_input_chars(input_file).unwrap();
-    if input.len() < 8 { return Ok(0) }
+fn part_2(input_file: &str) -> u32 {
+    let input: Vec<char> = load_input_chars(input_file);
+    if input.len() < 8 { return 0 }
     let mut result: u32 = 0; 
     let mut head: usize = 0;
     let mut tail: usize = 0;
@@ -78,8 +71,8 @@ fn part_2(input_file: &str) -> io::Result<u32> {
                 }
             }
             if valid_mul {
-                let mult1: u32 = cast_chars_to_int(&input[head+4..comma_idx]).unwrap();
-                let mult2: u32 = cast_chars_to_int(&input[comma_idx+1..tail]).unwrap();
+                let mult1: u32 = cast_chars_to_int(&input[head+4..comma_idx]);
+                let mult2: u32 = cast_chars_to_int(&input[comma_idx+1..tail]);
                 result += do_on * mult1 * mult2;
             }
             head = tail;
@@ -87,10 +80,10 @@ fn part_2(input_file: &str) -> io::Result<u32> {
             head += 1;
         }
     }
-    Ok(result)
+    result
 }
 
-fn cast_chars_to_int(characters: &[char]) -> io::Result<u32> {
+fn cast_chars_to_int(characters: &[char]) -> u32 {
     let mut len: u32 = characters.len().try_into().unwrap();
     let mut result: u32 = 0;
     let radix: u32 = 10;
@@ -98,7 +91,7 @@ fn cast_chars_to_int(characters: &[char]) -> io::Result<u32> {
         len -= 1;
         result += radix.pow(len) * ch.to_digit(10).unwrap();
     }
-    Ok(result)
+    result
 }
 
 
@@ -113,12 +106,12 @@ fn cast_chars_to_int(characters: &[char]) -> io::Result<u32> {
 //
 // Loading as bytes requires `my_bytes[idx] as char` to do character comparisons later
 
-// fn load_input_bytes() -> io::Result<Vec<u8>> {
+// fn load_input_bytes() -> Vec<u8> {
 //     let content: String = fs::read_to_string("./inputs/day02_p1.txt")?;
-//     Ok(content.into_bytes())
+//     content.into_bytes()
 // }
 
-fn load_input_chars(input_file: &str) -> io::Result<Vec<char>> {
-    let content: String = fs::read_to_string(input_file)?;
-    Ok(content.chars().collect())
+fn load_input_chars(input_file: &str) -> Vec<char> {
+    let content: String = fs::read_to_string(input_file).unwrap();
+    content.chars().collect()
 }

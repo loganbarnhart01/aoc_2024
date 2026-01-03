@@ -1,35 +1,28 @@
 use std::fs;
-use std::io;
 use std::iter::zip;
 use std::collections::HashMap;
 
 pub fn solve(input_file: &str){
-    match part_1(input_file) {
-        Ok(contents) => println!("Part 1: {:?}", contents),
-        Err(e) => println!("Error in part 1: {}", e),
-    }
-    match part_2(input_file) {
-        Ok(contents) => println!("Part 2: {}", contents),
-        Err(e) => println!("Error in part 2: {}", e),
-    }
+    println!("Part 1: {:?}", part_1(input_file));
+    println!("Part 2: {}", part_2(input_file));
 }
 
 // The whole idea behind part 1 is to take two lists and compute 
 // \sum |list1_i - list2_i| after the elements are sorted
-fn part_1(input_file: &str) -> io::Result<u32> {
-    let (list_one, list_two) = load_sorted_lists(input_file)?;
+fn part_1(input_file: &str) -> u32 {
+    let (list_one, list_two) = load_sorted_lists(input_file);
     let mut distances = Vec::new();
     for (n1, n2) in zip(list_one, list_two){
         distances.push(n1.abs_diff(n2));
     }
-    Ok(distances.iter().sum())
+    distances.iter().sum()
 }
 
 // Part 2 wants us to use the same two lists and compute:
 // \sum list1_i * n_i where n_i := the number of times list1_i
 // appears in list2
-fn part_2(input_file: &str) -> io::Result<u32>{
-    let (list_one, list_two) = load_sorted_lists(input_file)?;
+fn part_2(input_file: &str) -> u32{
+    let (list_one, list_two) = load_sorted_lists(input_file);
     let mut frequencies: HashMap<u32, u32> = HashMap::new();
 
     // rust does something interesting, pattern matching -> auto deref. 
@@ -54,11 +47,11 @@ fn part_2(input_file: &str) -> io::Result<u32>{
                                                         // present
         similarity += n1*count;
     }
-    Ok(similarity)
+    similarity
 }
 
-fn load_sorted_lists(input_file: &str) -> io::Result<(Vec<u32>, Vec<u32>)> {
-    let content: String = fs::read_to_string(input_file)?;
+fn load_sorted_lists(input_file: &str) -> (Vec<u32>, Vec<u32>) {
+    let content: String = fs::read_to_string(input_file).unwrap();
 
     let mut list_one = Vec::new();
     let mut list_two = Vec::new();
@@ -69,5 +62,5 @@ fn load_sorted_lists(input_file: &str) -> io::Result<(Vec<u32>, Vec<u32>)> {
     }
     list_one.sort();
     list_two.sort();
-    Ok((list_one, list_two))
+    (list_one, list_two)
 }
